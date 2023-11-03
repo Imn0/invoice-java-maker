@@ -1,14 +1,16 @@
 package fak.tura;
 
-public class Produkt {
+public class Produkt implements IProdukt{
   private int cenaNetto;
   private int vat;
   private String nazwa;
-  public Produkt(String cenaNetto, int vat, String nazwa){
+  private String jednostkaMiary;
+  public Produkt(String cenaNetto, int vat, String nazwa, String jednostkaMiary){
     int[] cena = StringUtil.parseStringToValue(cenaNetto);
     this.cenaNetto = cena[0]*100 + cena[1];
     this.vat = vat;
     this.nazwa = nazwa;
+    this.jednostkaMiary = jednostkaMiary;
   }
 
   public int getCenaNetto() {
@@ -17,11 +19,11 @@ public class Produkt {
   public int getVat() {
     return vat;
   }
-  public void setVat(int vat) {
-    this.vat = vat;
-  }
-
-  public String getNazwa() {
+  public String getNazwa(){
     return nazwa;
   }
+  public String getJednostkaMiary(){
+    return jednostkaMiary;
+  }
+
 }
