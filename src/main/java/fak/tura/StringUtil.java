@@ -6,6 +6,7 @@ public class StringUtil {
     return parseStringToValue(str, 2);
   }
   public static int[] parseStringToValue(String str, int decimalPlaces) throws NumberFormatException{
+//    str = str.trim();
     str += ".00";
     String[] arrOfstr = str.split("[.]");
     int czescCalkowita;

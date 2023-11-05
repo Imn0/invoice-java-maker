@@ -3,6 +3,7 @@ package fak.tura;
 import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.ArrayList;
 
@@ -14,15 +15,30 @@ public class Displayer implements IShowFakura{
   }
 
   public void showFakura() {
-    ArrayList<IElement> elements = faktura.getElements();
+    AT_Row row;
+    AsciiTable parties = new AsciiTable();
+    parties.addRule();
+    row = parties.addRow(null, "Sprzedawca", null, "Nabywca");
+    row.setTextAlignment(TextAlignment.CENTER);
+    parties.addRule();
+    ArrayList<Pair<String,String>> sprzedajacyFields = faktura.getSprzedajacy().getFields();
+    ArrayList<Pair<String,String>> kupujacyFields = faktura.getKupujacy().getFields();
+
+    for (int i = 0; i < sprzedajacyFields.size(); i++) {
+      parties.addRow(sprzedajacyFields.get(i).a, sprzedajacyFields.get(i).b, kupujacyFields.get(i).a, kupujacyFields.get(i).b);
+      parties.addRule();
+    }
+
+    String p = parties.render();
+    System.out.println(p);
+
     AsciiTable at = new AsciiTable();
 
-    AT_Row row;
     at.addRule();
     row = at.addRow("nazwa", "Jm.", "ilość", "Cena netto", "Wartość netto", "Stawka VAT", "Kwota VAT", "Wartość brutto");
     row.setTextAlignment(TextAlignment.RIGHT);
     at.addRule();
-    for (var element : elements) {
+    for (var element : faktura.getElements()) {
       row = at.addRow(element.getProdukt(), element.getJendostkaMiary(),element.getIlosc(), StringUtil.getStringFromValue(element.getCenaNetto()), StringUtil.getStringFromValue(element.getWartoscNetto()), element.getVat() + "%", StringUtil.getStringFromValue(element.getKowotaVAT()), StringUtil.getStringFromValue(element.getWartoscBrutto()));
       row.setTextAlignment(TextAlignment.RIGHT);
       at.addRule();

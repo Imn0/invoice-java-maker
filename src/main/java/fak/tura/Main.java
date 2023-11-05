@@ -1,9 +1,11 @@
 package fak.tura;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
-  public static void main(String[] args) {
+
+  public static void test1(){
     IProdukt produkt1 = new Produkt("10", 23, "baton", "szt.");
     IElement element1 = new Element(produkt1, "10");
 
@@ -21,6 +23,19 @@ public class Main {
     IFaktura faktura = new Faktura(elements);
     Displayer displayer = new Displayer(faktura);
     displayer.showFakura();
+  }
+  public static void main(String[] args)  {
+//    test1();
+    IFaktura faktura = new Faktura();
+    try {
+      faktura = Creator.generateFaktura();
+
+    } catch (IOException e) {
+      System.out.println("oops");
+    }
+    IShowFakura displayer = new Displayer(faktura);
+    displayer.showFakura();
+
 
   }
 }

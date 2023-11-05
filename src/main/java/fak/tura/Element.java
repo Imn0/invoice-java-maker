@@ -7,7 +7,7 @@ public class Element implements IElement{
   private int kowtaVat;
   private int wartoscBrutto;
 
-  public Element(IProdukt produkt, String ilosc){
+  public Element(IProdukt produkt, String ilosc) throws NumberFormatException{
     this.ilosc = ilosc;
     this.produkt = produkt;
 
