@@ -1,65 +1,68 @@
 package fak.tura;
 
-public class Element implements IElement{
-  private final IProdukt produkt;
-  private final String ilosc;
-  private int wartoscNetto;
-  private int kowtaVat;
-  private int wartoscBrutto;
+public class Element implements IElement {
+    public final IProduct product;
+    public final String amount;
+    private int priceBeforeTAX;
+    private int taxAmount;
+    private int priceAfterTAX;
 
-  public Element(IProdukt produkt, String ilosc) throws NumberFormatException{
-    this.ilosc = ilosc;
-    this.produkt = produkt;
+    public Element(final IProduct product, final String amount) throws NumberFormatException {
+        this.amount = amount;
+        this.product = product;
 
-    setWartoscNetto();
-    setKowtaVat();
-    setWartoscBrutto();
-  }
+        setPriceBeforeTAX();
+        setVATamount();
+        setPriceAfterTAX();
+    }
 
-  private void setWartoscNetto() {
-    int[] c = StringUtil.parseStringToValue(ilosc,3);
+    private void setPriceBeforeTAX() {
+        int[] c = StringUtil.parseStringToValue(amount, 3);
 
-    int iloscCalkowita = c[0];
-    int iloscUlamkowa = c[1];
-    int cena = produkt.getCenaNetto();
+        int iloscCalkowita = c[0];
+        int iloscUlamkowa = c[1];
+        int price = product.getUnitPriceBeforeTax();
 
-    this.wartoscNetto = (cena * iloscCalkowita + ( (cena*iloscUlamkowa) /1000 ));
-  }
+        this.priceBeforeTAX = price * iloscCalkowita + price * iloscUlamkowa / 1000;
+    }
 
-  private void setKowtaVat() {
-    this.kowtaVat =  wartoscNetto * produkt.getVat()/100;
-  }
+    private void setVATamount() {
+        this.taxAmount = priceBeforeTAX * product.getVat() / 100;
+    }
 
-  private void setWartoscBrutto() {
-    this.wartoscBrutto = kowtaVat + wartoscNetto;
-  }
+    private void setPriceAfterTAX() {
+        this.priceAfterTAX = taxAmount + priceBeforeTAX;
+    }
 
-  public String getProdukt() {
-    return produkt.getNazwa();
-  }
+    public String getProduct() {
+        return product.getName();
+    }
 
-  public String getJendostkaMiary() {
-    return produkt.getJednostkaMiary();
-  }
+    public String getQuantityUnit() {
+        return product.getQuantityUnit();
+    }
 
-  public int getCenaNetto() {
-    return produkt.getCenaNetto();
-  }
+    public int getCenaNetto() {
+        return product.getUnitPriceBeforeTax();
+    }
 
-  public int getVat() {
-    return produkt.getVat();
-  }
+    public int getVat() {
+        return product.getVat();
+    }
 
-  public int getWartoscNetto() {
-    return wartoscNetto;
-  }
+    public int getPriceBeforeTAX() {
+        return priceBeforeTAX;
+    }
 
-  public int getKowotaVAT(){
-    return kowtaVat;
-  }
+    public int getTaxAmount() {
+        return taxAmount;
+    }
 
-  public int getWartoscBrutto(){
-    return wartoscBrutto;
-  }
-  public String getIlosc(){return ilosc;}
+    public int getPriceAfterTAX() {
+        return priceAfterTAX;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
 }

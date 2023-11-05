@@ -1,5 +1,5 @@
 package fak.tura;
 
 public interface IShowFakura {
-  public void showFakura();
+    void showFakura();
 }

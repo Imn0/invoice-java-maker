@@ -5,54 +5,113 @@ import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import org.antlr.v4.runtime.misc.Pair;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class Displayer implements IShowFakura{
-  IFaktura faktura;
+public class Displayer implements IShowFakura {
+    private final IInvoice invoice;
 
-  public Displayer(IFaktura faktura){
-    this.faktura = faktura;
-  }
-
-  public void showFakura() {
-    AT_Row row;
-    AsciiTable parties = new AsciiTable();
-    parties.addRule();
-    row = parties.addRow(null, "Sprzedawca", null, "Nabywca");
-    row.setTextAlignment(TextAlignment.CENTER);
-    parties.addRule();
-    ArrayList<Pair<String,String>> sprzedajacyFields = faktura.getSprzedajacy().getFields();
-    ArrayList<Pair<String,String>> kupujacyFields = faktura.getKupujacy().getFields();
-
-    for (int i = 0; i < sprzedajacyFields.size(); i++) {
-      parties.addRow(sprzedajacyFields.get(i).a, sprzedajacyFields.get(i).b, kupujacyFields.get(i).a, kupujacyFields.get(i).b);
-      parties.addRule();
+    public Displayer(final IInvoice invoice) {
+        this.invoice = invoice;
     }
 
-    String p = parties.render();
-    System.out.println(p);
+    public void showFakura() {
+        AT_Row row;
+        try {
+            AsciiTable headerTable = new AsciiTable();
+            headerTable.addRule();
+            row = headerTable.addRow("Faktura VAT");
+            row.setTextAlignment(TextAlignment.CENTER);
+            headerTable.addRule();
+            row = headerTable.addRow("Nr: " + invoice.getInvoiceID());
+            row.setTextAlignment(TextAlignment.CENTER);
+            headerTable.addRule();
+            row = headerTable.addRow("Data wystawienia: " + invoice.getInvoiceDate());
+            row.setTextAlignment(TextAlignment.CENTER);
+            headerTable.addRule();
+            row = headerTable.addRow("Data sprzedaży: " + invoice.getSaleDate());
+            row.setTextAlignment(TextAlignment.CENTER);
+            headerTable.addRule();
+            String header = headerTable.render();
+            System.out.println(header);
+        } catch (Exception e) {
+            System.out.println("Błąd wyświetlania nagłówka");
+            System.out.println(e.getMessage());
+        }
+        try {
+            AsciiTable partiesTable = new AsciiTable();
+            partiesTable.addRule();
+            row = partiesTable.addRow(null, "Sprzedawca", null, "Nabywca");
+            row.setTextAlignment(TextAlignment.CENTER);
+            partiesTable.addRule();
+            List<Pair<String, String>> sellerFields = invoice.getSellerFields();
+            List<Pair<String, String>> buyerFields = invoice.getBuyerFields();
+            int k = Math.min(sellerFields.size(), buyerFields.size());
+            int i;
+            for (i = 0; i < k; i++) {
+                partiesTable.addRow(sellerFields.get(i).a, sellerFields.get(i).b, buyerFields.get(i).a, buyerFields.get(i).b);
+                partiesTable.addRule();
+            }
+            if (sellerFields.size() > buyerFields.size()) {
+                for (; i < sellerFields.size(); i++) {
+                    partiesTable.addRow(sellerFields.get(i).a, sellerFields.get(i).b, "", "");
+                    partiesTable.addRule();
+                }
+            } else {
+                for (; i < buyerFields.size(); i++) {
+                    partiesTable.addRow("", "", buyerFields.get(i).a, buyerFields.get(i).b);
+                    partiesTable.addRule();
+                }
+            }
 
-    AsciiTable at = new AsciiTable();
+            String parties = partiesTable.render();
+            System.out.println(parties);
+        } catch (Exception e) {
+            System.out.println("Błąd wyświetlania tabeli z danymi sprzedawcy i nabywcy");
+        }
 
-    at.addRule();
-    row = at.addRow("nazwa", "Jm.", "ilość", "Cena netto", "Wartość netto", "Stawka VAT", "Kwota VAT", "Wartość brutto");
-    row.setTextAlignment(TextAlignment.RIGHT);
-    at.addRule();
-    for (var element : faktura.getElements()) {
-      row = at.addRow(element.getProdukt(), element.getJendostkaMiary(),element.getIlosc(), StringUtil.getStringFromValue(element.getCenaNetto()), StringUtil.getStringFromValue(element.getWartoscNetto()), element.getVat() + "%", StringUtil.getStringFromValue(element.getKowotaVAT()), StringUtil.getStringFromValue(element.getWartoscBrutto()));
-      row.setTextAlignment(TextAlignment.RIGHT);
-      at.addRule();
+        try {
+            AsciiTable elementsTable = new AsciiTable();
+
+            elementsTable.addRule();
+            row = elementsTable.addRow("nazwa", "Jm.", "ilość", "Cena netto", "Wartość netto", "Stawka VAT", "Kwota VAT", "Wartość brutto");
+            row.setTextAlignment(TextAlignment.RIGHT);
+            elementsTable.addRule();
+            for (var element : invoice.getElements()) {
+                row = elementsTable.addRow(element.getProduct(), element.getQuantityUnit(), element.getAmount(), StringUtil.getStringFromValue(element.getCenaNetto()), StringUtil.getStringFromValue(element.getPriceBeforeTAX()), element.getVat() + "%", StringUtil.getStringFromValue(element.getTaxAmount()), StringUtil.getStringFromValue(element.getPriceAfterTAX()));
+                row.setTextAlignment(TextAlignment.RIGHT);
+                elementsTable.addRule();
+            }
+            for (int vat : invoice.getAvailableVATs()) {
+                row = elementsTable.addRow(null, null, "", "W tym", StringUtil.getStringFromValue(invoice.getWartoscNettoForVAT(vat)), vat + "%", StringUtil.getStringFromValue(invoice.getKwotaVATForVAT(vat)), StringUtil.getStringFromValue(invoice.getWartoscBruttoForVAT(vat)));
+                row.setTextAlignment(TextAlignment.RIGHT);
+            }
+            elementsTable.addRule();
+            row = elementsTable.addRow(null, null, "", "Razem", StringUtil.getStringFromValue(invoice.getTotalPriceBeforeTax()), "", StringUtil.getStringFromValue(invoice.getTotalVatAmount()), StringUtil.getStringFromValue(invoice.getTotalPriceAfterTax()));
+            row.setTextAlignment(TextAlignment.RIGHT);
+            elementsTable.addRule();
+            String rend = elementsTable.render();
+            System.out.println(rend);
+
+        } catch (Exception e) {
+            System.out.println("Błąd wyświetlania tabeli z danymi elementów");
+        }
+
+        try {
+            AsciiTable paymentMethodTable = new AsciiTable();
+            paymentMethodTable.addRule();
+            List<Pair<String, String>> paymentMethodFields = invoice.getPaymentMethodFields();
+            for (int i = 0; i < paymentMethodFields.size(); i++) {
+                paymentMethodTable.addRow(paymentMethodFields.get(i).a, paymentMethodFields.get(i).b);
+                paymentMethodTable.addRule();
+            }
+            String rend = paymentMethodTable.render();
+            System.out.println(rend);
+        } catch (Exception e) {
+            System.out.println("Błąd wyświetlania tabeli z danymi płatności");
+            System.out.println(e.getMessage());
+        }
+
+
     }
-    for(int vat: faktura.getAvailableVATs()){
-      row = at.addRow(null, null, "", "W tym", StringUtil.getStringFromValue(faktura.getWartoscNettoForVAT(vat)), vat+"%", StringUtil.getStringFromValue(faktura.getKwotaVATForVAT(vat)), StringUtil.getStringFromValue(faktura.getWartoscBruttoForVAT(vat)));
-      row.setTextAlignment(TextAlignment.RIGHT);
-    }
-    at.addRule();
-    row = at.addRow(null, null, "", "Razem", StringUtil.getStringFromValue(faktura.getTotalWartoscNetto()), "", StringUtil.getStringFromValue(faktura.getTotalKwotaVAT()), StringUtil.getStringFromValue(faktura.getTotalWartoscBrutto()));
-    row.setTextAlignment(TextAlignment.RIGHT);
-    at.addRule();
-    String rend = at.render();
-    System.out.println(rend);
-  }
 }
 
