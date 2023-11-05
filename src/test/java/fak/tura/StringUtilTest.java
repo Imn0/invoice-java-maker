@@ -1,13 +1,10 @@
 package fak.tura;
 
 
-//import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.function.ThrowingRunnable;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.Assert.*;
 
@@ -50,17 +47,17 @@ class StringUtilTest {
   @Test
   void parseStringToValue5() {
     String str = "-1.03";
-    assertThrows(NumberFormatException.class, (ThrowingRunnable) () -> {StringUtil.parseStringToValue(str);});
+    assertThrows(NumberFormatException.class, () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
   void parseStringToValue6() {
     String str = "aaaaa.03";
-    assertThrows(NumberFormatException.class, (ThrowingRunnable) () -> {StringUtil.parseStringToValue(str);});
+    assertThrows(NumberFormatException.class,  () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
   void parseStringToValue7() {
     String str = "3.-03";
-    assertThrows(NumberFormatException.class, (ThrowingRunnable) () -> {StringUtil.parseStringToValue(str);});
+    assertThrows(NumberFormatException.class,  () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
   void parseStringToValue8() {
