@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 

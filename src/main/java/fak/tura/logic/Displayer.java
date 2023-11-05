@@ -1,8 +1,9 @@
-package fak.tura;
+package fak.tura.logic;
 
 import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+import fak.tura.models.IInvoice;
 import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class Displayer implements IShowFakura {
     public Displayer(final IInvoice invoice) {
         this.invoice = invoice;
     }
-
+    @Override
     public void showFakura() {
         AT_Row row;
         try {
@@ -45,20 +46,20 @@ public class Displayer implements IShowFakura {
             partiesTable.addRule();
             List<Pair<String, String>> sellerFields = invoice.getSellerFields();
             List<Pair<String, String>> buyerFields = invoice.getBuyerFields();
-            int k = Math.min(sellerFields.size(), buyerFields.size());
-            int i;
-            for (i = 0; i < k; i++) {
-                partiesTable.addRow(sellerFields.get(i).a, sellerFields.get(i).b, buyerFields.get(i).a, buyerFields.get(i).b);
+            int firstLoopLimit = Math.min(sellerFields.size(), buyerFields.size());
+            int loopCounter;
+            for (loopCounter = 0; loopCounter < firstLoopLimit; loopCounter++) {
+                partiesTable.addRow(sellerFields.get(loopCounter).a, sellerFields.get(loopCounter).b, buyerFields.get(loopCounter).a, buyerFields.get(loopCounter).b);
                 partiesTable.addRule();
             }
             if (sellerFields.size() > buyerFields.size()) {
-                for (; i < sellerFields.size(); i++) {
-                    partiesTable.addRow(sellerFields.get(i).a, sellerFields.get(i).b, "", "");
+                for (; loopCounter < sellerFields.size(); loopCounter++) {
+                    partiesTable.addRow(sellerFields.get(loopCounter).a, sellerFields.get(loopCounter).b, "", "");
                     partiesTable.addRule();
                 }
             } else {
-                for (; i < buyerFields.size(); i++) {
-                    partiesTable.addRow("", "", buyerFields.get(i).a, buyerFields.get(i).b);
+                for (; loopCounter < buyerFields.size(); loopCounter++) {
+                    partiesTable.addRow("", "", buyerFields.get(loopCounter).a, buyerFields.get(loopCounter).b);
                     partiesTable.addRule();
                 }
             }
@@ -100,8 +101,8 @@ public class Displayer implements IShowFakura {
             AsciiTable paymentMethodTable = new AsciiTable();
             paymentMethodTable.addRule();
             List<Pair<String, String>> paymentMethodFields = invoice.getPaymentMethodFields();
-            for (int i = 0; i < paymentMethodFields.size(); i++) {
-                paymentMethodTable.addRow(paymentMethodFields.get(i).a, paymentMethodFields.get(i).b);
+            for (Pair<String, String> paymentMethodField : paymentMethodFields) {
+                paymentMethodTable.addRow(paymentMethodField.a, paymentMethodField.b);
                 paymentMethodTable.addRule();
             }
             String rend = paymentMethodTable.render();

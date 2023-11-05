@@ -1,4 +1,6 @@
-package fak.tura;
+package fak.tura.logic;
+
+import fak.tura.models.IInvoice;
 
 import java.io.IOException;
 

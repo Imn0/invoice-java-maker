@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -8,32 +8,37 @@ import java.util.List;
 public class CashPayment implements IPaymentMethod {
 
     /**
-     * Cash payment method
+     * Cash payment method.
      */
     private final String name;
 
     /**
-     * Status of payment
+     * Status of payment.
      */
     private String status;
 
     /**
-     * Payment due date
+     * Payment due date.
      */
     private String paymentDueDate;
 
+
+    /**
+     * Constructor.
+     */
     public CashPayment() {
         name = "Gotówka";
     }
 
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
-    public void setPaymentDueDate(String paymentDueDate) {
+    public void setPaymentDueDate(final String paymentDueDate) {
         this.paymentDueDate = paymentDueDate;
     }
 
+    @Override
     public List<Pair<String, String>> getFields() {
         List<Pair<String, String>> fields = new ArrayList<>();
         Pair<String, String> field = new Pair<>("Płatność:", name);

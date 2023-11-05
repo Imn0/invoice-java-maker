@@ -2,118 +2,118 @@ package fak.tura;
 
 
 
-import org.junit.function.ThrowingRunnable;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import fak.tura.logic.StringUtil;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 
-class StringUtilTest {
+public class StringUtilTest {
 
   @Test
-  void parseStringToValue1() {
+  public void parseStringToValue1() {
     String str = "1.30";
     int[] a = StringUtil.parseStringToValue(str);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(30, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(30, a[1]);
   }
   @Test
-  void parseStringToValue2() {
+  public void parseStringToValue2() {
     String str = "1";
     int[] a = StringUtil.parseStringToValue(str);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(0, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(0, a[1]);
 
   }
   @Test
-  void parseStringToValue3() {
+  public void parseStringToValue3() {
     String str = "1.03";
     int[] a = StringUtil.parseStringToValue(str);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(3, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(3, a[1]);
   }
   @Test
-  void parseStringToValue4() {
+  public void parseStringToValue4() {
     String str = "1.03";
     int[] a = StringUtil.parseStringToValue(str);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(3, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(3, a[1]);
   }
   @Test
-  void parseStringToValue5() {
+  public void parseStringToValue5() {
     String str = "-1.03";
     assertThrows(NumberFormatException.class, () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
-  void parseStringToValue6() {
+  public void parseStringToValue6() {
     String str = "aaaaa.03";
     assertThrows(NumberFormatException.class,  () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
-  void parseStringToValue7() {
+  public void parseStringToValue7() {
     String str = "3.-03";
     assertThrows(NumberFormatException.class,  () -> {StringUtil.parseStringToValue(str);});
   }
   @Test
-  void parseStringToValue8() {
+  public void parseStringToValue8() {
     String str = "1.303";
     int[] a = StringUtil.parseStringToValue(str,3);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(303, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(303, a[1]);
   }
   @Test
-  void parseStringToValue9() {
+  public void parseStringToValue9() {
     String str = "1.303";
     int[] a = StringUtil.parseStringToValue(str,1);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(3, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(3, a[1]);
   }
   @Test
-  void parseStringToValue10() {
+  public void parseStringToValue10() {
     String str = "1.303";
     int[] a = StringUtil.parseStringToValue(str,2);
 
-    Assertions.assertEquals(1, a[0]);
-    Assertions.assertEquals(30, a[1]);
+    assertEquals(1, a[0]);
+    assertEquals(30, a[1]);
   }
   @Test
-  void getStringFromValue1() {
+  public void getStringFromValue1() {
     String str = "0.00";
-    Assertions.assertEquals(str, StringUtil.getStringFromValue(0));
+    assertEquals(str, StringUtil.getStringFromValue(0));
   }
   @Test
-  void getStringFromValue2() {
+  public void getStringFromValue2() {
     String str = "0.03";
-    Assertions.assertEquals(str, StringUtil.getStringFromValue(3));
+    assertEquals(str, StringUtil.getStringFromValue(3));
   }
   @Test
-  void getStringFromValue3() {
+  public void getStringFromValue3() {
     String str = "0.20";
-    Assertions.assertEquals(str, StringUtil.getStringFromValue(20));
+    assertEquals(str, StringUtil.getStringFromValue(20));
   }
   @Test
-  void getStringFromValue4() {
+  public void getStringFromValue4() {
     String str = "12.03";
-    Assertions.assertEquals(str, StringUtil.getStringFromValue(1203));
+    assertEquals(str, StringUtil.getStringFromValue(1203));
   }
   @Test
-  void getStringFromValue5() {
+  public void getStringFromValue5() {
     String str = "1420.30";
-    Assertions.assertEquals(str, StringUtil.getStringFromValue(142030));
+    assertEquals(str, StringUtil.getStringFromValue(142030));
   }
   @Test
-  void getStringFromValue6() {
-    assertThrows(NumberFormatException.class, (ThrowingRunnable) () -> {StringUtil.getStringFromValue(-2);});
+  public void getStringFromValue6() {
+    assertThrows(NumberFormatException.class, () -> {StringUtil.getStringFromValue(-2);});
   }
   @Test
-  void getStringFromValue7() {
-    assertThrows(NumberFormatException.class, (ThrowingRunnable) () -> {StringUtil.getStringFromValue(-12);});
+  public void getStringFromValue7() {
+    assertThrows(NumberFormatException.class, () -> {StringUtil.getStringFromValue(-12);});
   }
 }

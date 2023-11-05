@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -35,59 +35,59 @@ public class Invoice implements IInvoice {
         setAvailableVATs();
     }
 
-    public void setSprzedajacy(IInvoiceParty sprzedajacy) {
+    public void setSprzedajacy(final IInvoiceParty sprzedajacy) {
         this.seller = sprzedajacy;
     }
-
+    @Override
     public void setBuyer(final IInvoiceParty buyer) {
         this.buyer = buyer;
     }
-
+    @Override
     public String getInvoiceID() {
         return invoiceID;
     }
-
+    @Override
     public void setInvoiceID(final String invoiceID) {
         this.invoiceID = invoiceID;
     }
-
+    @Override
     public String getInvoiceDate() {
         return invoiceDate;
     }
-
+    @Override
     public void setInvoiceDate(final String invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
-
+    @Override
     public String getSaleDate() {
         return saleDate;
     }
-
+    @Override
     public void setSaleDate(final String saleDate) {
         this.saleDate = saleDate;
     }
-
+    @Override
     public String getAdditionalInfo() {
         return additionalInfo;
     }
-
+    @Override
     public void setAdditionalInfo(final String additionalInfo) {
         this.additionalInfo = additionalInfo;
     }
-
+    @Override
     public List<Pair<String, String>> getSellerFields() {
         return seller.getFields();
     }
-
+    @Override
     public List<Pair<String, String>> getBuyerFields() {
         return buyer.getFields();
     }
-
+    @Override
     public List<Pair<String, String>> getPaymentMethodFields() {
         return paymentMethod.getFields();
     }
-
-    public void setPaymentMethod(IPaymentMethod paymentMethod) {
+    @Override
+    public void setPaymentMethod(final IPaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 

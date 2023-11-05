@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -14,7 +14,7 @@ public class Person implements IInvoiceParty {
     private String taxIdenificationNumber;
     private String socialSecurityNumber;
 
-    public Person(String imie, String surname, String adres, String email, String phoneNumber) {
+    public Person(final String imie, final String surname, final String adres, final String email, String phoneNumber) {
         this.adress = adres;
         this.name = imie;
         this.surname = surname;
@@ -23,11 +23,11 @@ public class Person implements IInvoiceParty {
 
     }
 
-    public void setTaxIdenificationNumber(String taxIdenificationNumber) {
+    public void setTaxIdenificationNumber(final String taxIdenificationNumber) {
         this.taxIdenificationNumber = taxIdenificationNumber;
     }
 
-    public void setPESEL(String socialSecurityNumber) {
+    public void setPESEL(final String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 

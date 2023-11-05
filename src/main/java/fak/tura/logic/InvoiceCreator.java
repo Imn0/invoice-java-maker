@@ -1,4 +1,6 @@
-package fak.tura;
+package fak.tura.logic;
+
+import fak.tura.models.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +15,6 @@ public final class InvoiceCreator implements IInvoiceCreator {
     }
 
     public IInvoice generateInvoice() throws IOException {
-        System.out.println("Witamy w kreatorze faktur 2000");
 
         final IInvoice invoice = new Invoice();
 
@@ -29,8 +30,10 @@ public final class InvoiceCreator implements IInvoiceCreator {
         final String saleDate = reader.readLine();
         invoice.setSaleDate(saleDate);
 
-        final IInvoiceParty buyer = createInvoiceParty();
+        System.out.println("Wprowadź sprzedającego");
         final IInvoiceParty seller = createInvoiceParty();
+        System.out.println("Wprowadź kupującego");
+        final IInvoiceParty buyer = createInvoiceParty();
         final IPaymentMethod paymentMethod = createPaymentMethod();
 
         boolean newProdukt = true;
@@ -59,11 +62,11 @@ public final class InvoiceCreator implements IInvoiceCreator {
         invoice.setSprzedajacy(seller);
         invoice.setElements(elements);
         invoice.setPaymentMethod(paymentMethod);
-        reader.close();
         return invoice;
     }
 
     private IPaymentMethod createPaymentMethod() throws IOException {
+        IPaymentMethod paymentMethod;
         while (true) {
             try {
                 System.out.println("Wybierz metodę płatności");
@@ -74,13 +77,15 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 String input = reader.readLine();
                 if (!input.isEmpty()) {
                     if (input.charAt(0) == gotowkaOption) {
-                        return new CashPayment();
+                        paymentMethod = new CashPayment();
+                        break;
                     } else if (input.charAt(0) == przelewOption) {
                         System.out.print("numer konta: ");
                         String accountNumber = reader.readLine();
                         System.out.print("bank: ");
                         String bankName = reader.readLine();
-                        return new TransferPayment(bankName, accountNumber);
+                        paymentMethod = new TransferPayment(bankName, accountNumber);
+                        break;
 
                     }
                 }
@@ -88,6 +93,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 System.out.println("Error dodaj produkt/usuługe jeszcze raz");
             }
         }
+        return paymentMethod;
     }
 
     private IElement createElement() throws IOException {
@@ -111,11 +117,10 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 System.out.print("cenna netto: ");
                 final String cenaNetto = reader.readLine();
 
-                final IProduct produkt = new Product(cenaNetto, vat, nazwa, jednostkaMiary);
 
                 System.out.print("ilosc: ");
                 final String ilosc = reader.readLine();
-                return new Element(produkt, ilosc);
+                return new Element(cenaNetto, vat, nazwa, jednostkaMiary, ilosc);
             } catch (NumberFormatException e) {
                 System.out.println("Error dodaj produkt/usuługe jeszcze raz");
             }
@@ -137,7 +142,6 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 if (!input.isEmpty()) {
                     if (input.charAt(0) == firmaOption) {
                         gettingInput = false;
-                        isCompany = true;
                     } else if (input.charAt(0) == osobaOption) {
                         gettingInput = false;
                         isCompany = false;
@@ -186,7 +190,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
             System.out.print("telefon: ");
             String phoneNumber = reader.readLine();
 
-            IInvoiceParty party = null;
+            IInvoiceParty party;
             if (isCompany) {
                 party = new Company(companyName, adress, email, phoneNumber, taxIdentificationNumber);
             } else {

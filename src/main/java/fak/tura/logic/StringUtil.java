@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.logic;
 
 public final class StringUtil {
 
@@ -6,12 +6,12 @@ public final class StringUtil {
 
     }
 
-    public static int[] parseStringToValue(String str)
+    public static int[] parseStringToValue(final String str)
             throws NumberFormatException {
         return parseStringToValue(str, 2);
     }
 
-    public static int[] parseStringToValue(String str, int decimalPlaces) throws NumberFormatException {
+    public static int[] parseStringToValue(final String str, int decimalPlaces) throws NumberFormatException {
         String updatedstr = str.trim();
         updatedstr += ".00";
         String[] arrOfstr = updatedstr.split("[.]");
@@ -43,7 +43,7 @@ public final class StringUtil {
         };
     }
 
-    public static String getStringFromValue(int value) throws NumberFormatException {
+    public static String getStringFromValue(final int value) throws NumberFormatException {
         if (value < 0) {
             throw new NumberFormatException("nie można przekonwertować ujemnej liczby");
         }

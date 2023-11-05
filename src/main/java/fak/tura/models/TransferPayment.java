@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -11,7 +11,7 @@ public class TransferPayment implements IPaymentMethod {
     private final String name;
     private final String bankName;
 
-    public TransferPayment(String bankName, String accountNumber) {
+    public TransferPayment(final String bankName, final String accountNumber) {
         this.accountNumber = accountNumber;
         this.name = "przelew";
         this.bankName = bankName;

@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 public interface IElement {
     String getProduct();

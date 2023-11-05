@@ -1,4 +1,6 @@
-package fak.tura;
+package fak.tura.models;
+
+import fak.tura.logic.StringUtil;
 
 public class Product implements IProduct {
     private final int priceBeforeTax;
@@ -6,7 +8,7 @@ public class Product implements IProduct {
     private final String name;
     private final String quantityUnit;
 
-    public Product(String priceBeforeTax, int vat, String name, String quantityUnit) throws NumberFormatException {
+    public Product(String priceBeforeTax, int vat, final String name, final String quantityUnit) throws NumberFormatException {
         int[] cena = StringUtil.parseStringToValue(priceBeforeTax);
         this.priceBeforeTax = cena[0] * 100 + cena[1];
         this.vat = vat;

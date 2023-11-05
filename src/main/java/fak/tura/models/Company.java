@@ -1,4 +1,4 @@
-package fak.tura;
+package fak.tura.models;
 
 import org.antlr.v4.runtime.misc.Pair;
 
@@ -13,7 +13,7 @@ public class Company implements IInvoiceParty {
     private final String phoneNumber;
     private final String taxIdentificationNumber;
 
-    public Company(String name, final String adress, final String email, final String phoneNumber, final String taxIdentificationNumber) {
+    public Company(final String name, final String adress, final String email, final String phoneNumber, final String taxIdentificationNumber) {
         this.adress = adress;
         this.name = name;
         this.email = email;
@@ -21,6 +21,7 @@ public class Company implements IInvoiceParty {
         this.taxIdentificationNumber = taxIdentificationNumber;
     }
 
+    @Override
     public final List<Pair<String, String>> getFields() {
         List<Pair<String, String>> fields = new ArrayList<>();
         Pair<String, String> field = new Pair<>("Nazwa:", name);
