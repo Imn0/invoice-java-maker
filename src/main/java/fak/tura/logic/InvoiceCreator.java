@@ -1,12 +1,18 @@
 package fak.tura.logic;
 
 import fak.tura.models.*;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+
+/**
+ * Controler, pure fabrication
+ */
+@Component
 public final class InvoiceCreator implements IInvoiceCreator {
     private final BufferedReader reader;
 
@@ -14,21 +20,17 @@ public final class InvoiceCreator implements IInvoiceCreator {
         reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public IInvoice generateInvoice() throws IOException {
+    public Invoice generateInvoice() throws IOException {
 
-        final IInvoice invoice = new Invoice();
 
         System.out.print("Podaj nazwę faktury: ");
         final String invoiceID = reader.readLine();
-        invoice.setInvoiceID(invoiceID);
 
         System.out.print("Podaj datę wystawienia: ");
         final String invoiceDate = reader.readLine();
-        invoice.setInvoiceDate(invoiceDate);
 
         System.out.print("Podaj datę sprzedarzy: ");
         final String saleDate = reader.readLine();
-        invoice.setSaleDate(saleDate);
 
         System.out.println("Wprowadź sprzedającego");
         final IInvoiceParty seller = createInvoiceParty();
@@ -37,7 +39,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
         final IPaymentMethod paymentMethod = createPaymentMethod();
 
         boolean newProdukt = true;
-        final ArrayList<IElement> elements = new ArrayList<>();
+        final ArrayList<Element> elements = new ArrayList<>();
 
         while (newProdukt) {
             elements.add(createElement());
@@ -58,11 +60,8 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 }
             }
         }
-        invoice.setBuyer(buyer);
-        invoice.setSprzedajacy(seller);
-        invoice.setElements(elements);
-        invoice.setPaymentMethod(paymentMethod);
-        return invoice;
+
+        return new Invoice(elements, seller, buyer, invoiceID, invoiceDate, saleDate, "",paymentMethod);
     }
 
     private IPaymentMethod createPaymentMethod() throws IOException {
@@ -96,7 +95,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
         return paymentMethod;
     }
 
-    private IElement createElement() throws IOException {
+    private Element createElement() throws IOException {
 
         while (true) {
             try {
@@ -112,7 +111,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
                 svat = svat.replace('%', ' ');
                 svat = svat.trim();
 
-                final int vat = StringUtil.parseStringToValue(svat)[0];
+                final int vat = Integer.parseInt(svat);
 
                 System.out.print("cenna netto: ");
                 final String cenaNetto = reader.readLine();
@@ -202,5 +201,4 @@ public final class InvoiceCreator implements IInvoiceCreator {
             return party;
         }
     }
-
 }

@@ -4,6 +4,9 @@ import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.List;
 
+/**
+ * Protected variations
+ */
 public interface IInvoiceParty {
     /**
      * @return List of pairs like ( ("name", "Jacob"), ("surname", "Smith") )

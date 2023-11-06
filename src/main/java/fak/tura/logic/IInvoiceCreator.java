@@ -1,9 +1,7 @@
 package fak.tura.logic;
-
-import fak.tura.models.IInvoice;
-
+import fak.tura.models.Invoice;
 import java.io.IOException;
 
 public interface IInvoiceCreator {
-    IInvoice generateInvoice() throws IOException;
+    Invoice generateInvoice() throws IOException;
 }

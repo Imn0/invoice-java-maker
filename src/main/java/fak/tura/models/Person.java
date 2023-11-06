@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.misc.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Person implements IInvoiceParty {
     private final String name;
     private final String surname;

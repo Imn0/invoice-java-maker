@@ -3,19 +3,27 @@ package fak.tura.logic;
 import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
-import fak.tura.models.IInvoice;
+import fak.tura.models.Invoice;
 import org.antlr.v4.runtime.misc.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public class Displayer implements IShowFakura {
-    private final IInvoice invoice;
-
-    public Displayer(final IInvoice invoice) {
-        this.invoice = invoice;
+/**
+ * Pure fabrication
+ */
+@Component
+public class Displayer implements IShowInvoice {
+    private final IElementCalculator ElementCalculator;
+    private final IInvoiceCalculator InvoiceCalculator;
+    @Autowired
+    public Displayer(IElementCalculator elementCalculator, IInvoiceCalculator invoiceCalculator){
+        ElementCalculator = elementCalculator;
+        InvoiceCalculator = invoiceCalculator;
     }
     @Override
-    public void showFakura() {
+    public void showInvoice(Invoice invoice){
         AT_Row row;
         try {
             AsciiTable headerTable = new AsciiTable();
@@ -23,13 +31,13 @@ public class Displayer implements IShowFakura {
             row = headerTable.addRow("Faktura VAT");
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Nr: " + invoice.getInvoiceID());
+            row = headerTable.addRow("Nr: " + invoice.invoiceID);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Data wystawienia: " + invoice.getInvoiceDate());
+            row = headerTable.addRow("Data wystawienia: " + invoice.invoiceDate);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Data sprzedaży: " + invoice.getSaleDate());
+            row = headerTable.addRow("Data sprzedaży: " + invoice.saleDate);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
             String header = headerTable.render();
@@ -44,8 +52,8 @@ public class Displayer implements IShowFakura {
             row = partiesTable.addRow(null, "Sprzedawca", null, "Nabywca");
             row.setTextAlignment(TextAlignment.CENTER);
             partiesTable.addRule();
-            List<Pair<String, String>> sellerFields = invoice.getSellerFields();
-            List<Pair<String, String>> buyerFields = invoice.getBuyerFields();
+            List<Pair<String, String>> sellerFields = invoice.seller.getFields();
+            List<Pair<String, String>> buyerFields = invoice.buyer.getFields();
             int firstLoopLimit = Math.min(sellerFields.size(), buyerFields.size());
             int loopCounter;
             for (loopCounter = 0; loopCounter < firstLoopLimit; loopCounter++) {
@@ -77,17 +85,17 @@ public class Displayer implements IShowFakura {
             row = elementsTable.addRow("nazwa", "Jm.", "ilość", "Cena netto", "Wartość netto", "Stawka VAT", "Kwota VAT", "Wartość brutto");
             row.setTextAlignment(TextAlignment.RIGHT);
             elementsTable.addRule();
-            for (var element : invoice.getElements()) {
-                row = elementsTable.addRow(element.getProduct(), element.getQuantityUnit(), element.getAmount(), StringUtil.getStringFromValue(element.getCenaNetto()), StringUtil.getStringFromValue(element.getPriceBeforeTAX()), element.getVat() + "%", StringUtil.getStringFromValue(element.getTaxAmount()), StringUtil.getStringFromValue(element.getPriceAfterTAX()));
+            for (var element : invoice.elements) {
+                row = elementsTable.addRow(element.product.name, element.product.quantityUnit, element.amount, element.product.priceBeforeTax, ElementCalculator.calculateTotalPriceBeforeTax(element), element.product.vat, ElementCalculator.calculateTotalTaxAmount(element), ElementCalculator.calucateTotalPriceAfterTax(element));
                 row.setTextAlignment(TextAlignment.RIGHT);
                 elementsTable.addRule();
             }
-            for (int vat : invoice.getAvailableVATs()) {
-                row = elementsTable.addRow(null, null, "", "W tym", StringUtil.getStringFromValue(invoice.getWartoscNettoForVAT(vat)), vat + "%", StringUtil.getStringFromValue(invoice.getKwotaVATForVAT(vat)), StringUtil.getStringFromValue(invoice.getWartoscBruttoForVAT(vat)));
+            for (var vat : invoice.getAvailableVATs()) {
+                row = elementsTable.addRow(null, null, "", "W tym", InvoiceCalculator.totalBeforeTax(invoice, vat), vat, InvoiceCalculator.totalTax(invoice, vat), InvoiceCalculator.totalAfetTax(invoice, vat));
                 row.setTextAlignment(TextAlignment.RIGHT);
             }
             elementsTable.addRule();
-            row = elementsTable.addRow(null, null, "", "Razem", StringUtil.getStringFromValue(invoice.getTotalPriceBeforeTax()), "", StringUtil.getStringFromValue(invoice.getTotalVatAmount()), StringUtil.getStringFromValue(invoice.getTotalPriceAfterTax()));
+            row = elementsTable.addRow(null, null, "", "Razem", InvoiceCalculator.totalBeforeTax(invoice), "", InvoiceCalculator.totalTax(invoice), InvoiceCalculator.totalAfetTax(invoice));
             row.setTextAlignment(TextAlignment.RIGHT);
             elementsTable.addRule();
             String rend = elementsTable.render();
@@ -100,7 +108,7 @@ public class Displayer implements IShowFakura {
         try {
             AsciiTable paymentMethodTable = new AsciiTable();
             paymentMethodTable.addRule();
-            List<Pair<String, String>> paymentMethodFields = invoice.getPaymentMethodFields();
+            List<Pair<String, String>> paymentMethodFields = invoice.paymentMethod.getFields();
             for (Pair<String, String> paymentMethodField : paymentMethodFields) {
                 paymentMethodTable.addRow(paymentMethodField.a, paymentMethodField.b);
                 paymentMethodTable.addRule();
