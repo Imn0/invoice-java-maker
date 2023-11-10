@@ -13,15 +13,15 @@ public class TransferPayment implements IPaymentMethod {
 
     public TransferPayment(final String bankName, final String accountNumber) {
         this.accountNumber = accountNumber;
-        this.name = "przelew";
+        this.name = "bank transfer";
         this.bankName = bankName;
     }
 
     public List<Pair<String, String>> getFields() {
         List<Pair<String, String>> fields = new ArrayList<>();
-        Pair<String, String> field = new Pair<>("Płatność:", name);
+        Pair<String, String> field = new Pair<>("Method:", name);
         fields.add(field);
-        field = new Pair<>("Numer Konta:", accountNumber);
+        field = new Pair<>("Account number:", accountNumber);
         fields.add(field);
         field = new Pair<>("Bank", bankName);
         fields.add(field);

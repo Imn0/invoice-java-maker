@@ -2,9 +2,7 @@ package fak.tura.logic;
 import fak.tura.models.Element;
 import org.springframework.stereotype.Component;
 
-/**
- * High cohesion, low coupling, pure fabrication
- */
+
 @Component
 public class ElementCalculator implements IElementCalculator{
 

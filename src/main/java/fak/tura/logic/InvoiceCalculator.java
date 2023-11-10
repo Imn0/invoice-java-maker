@@ -4,9 +4,7 @@ import fak.tura.models.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * Polymorphism
- */
+
 @Component
 public class InvoiceCalculator implements IInvoiceCalculator{
 

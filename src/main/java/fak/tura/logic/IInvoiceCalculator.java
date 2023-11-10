@@ -2,9 +2,6 @@ package fak.tura.logic;
 
 import fak.tura.models.Invoice;
 
-/**
- * Protected variations, polymorphism
- */
 public interface IInvoiceCalculator {
     FixedPointNumber totalAfetTax(Invoice invoice);
     FixedPointNumber totalTax(Invoice invoice);

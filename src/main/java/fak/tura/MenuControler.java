@@ -3,6 +3,7 @@ package fak.tura;
 import fak.tura.logic.IInvoiceCreator;
 import fak.tura.logic.IShowInvoice;
 import fak.tura.models.Invoice;
+import fak.tura.repository.IRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controler
+ * Controler for menu loop
  * */
 @Controller
 public class MenuControler implements IMenu {
@@ -33,30 +34,29 @@ public class MenuControler implements IMenu {
     }
 
     public void Loop() throws IOException {
-        if (repository == null) {
-            System.out.println("repository is null");
-            return;
-        }
+//        if (repository == null) {
+//            System.out.println("Error initializing repository");
+//            return;
+//        }
         Invoice invoice = null;
 
-        System.out.println("Witamy w kreatorze faktur 2000");
         boolean exit = false;
         String input;
         while (!exit)
         {
-            System.out.println("Wybierz opcję:\n" +
-                    "1. Dodaj fakturę\n" +
-                    "2. Wyświetl fakturę\n" +
-                    "3. Pokaż faktury\n" +
-                    "4. Zapisz fakurę\n" +
-                    "5. Wybierz fakturę\n" +
-                    "q. Wyjdź");
+            System.out.println("Choose option:\n" +
+                    "1. Create an invoice\n" +
+                    "2. Show selected invoice\n" +
+                    "3. Show invloice list\n" +
+                    "4. Save invoice\n" +
+                    "5. Choose an invoice\n" +
+                    "q. Exit");
             if (invoice == null){
-                System.out.println("Obecnie nie wybrano faktury");
+                System.out.println("No invoice selected");
             } else {
-                System.out.println("Wybrano fakturę: " + invoice.invoiceID);
+                System.out.println("Selected invoice: " + invoice.invoiceName);
             }
-            System.out.print("Wybór: ");
+            System.out.print("Option: ");
             input = reader.readLine();
             if (input.isEmpty()) {
                 continue;
@@ -65,32 +65,32 @@ public class MenuControler implements IMenu {
                 case '1':
                     invoice = creator.generateInvoice();
                     invoices.add(invoice);
-                    System.out.println("Dodano oraz wybrano fakturę");
+                    System.out.println("Added an invoice");
                     break;
                 case '2':
                     if (invoice == null){
-                        System.out.println("Nie wybrano faktury");
+                        System.out.println("No invloice chosen");
                     } else {
                         displayer.showInvoice(invoice);
                     }
                     break;
                 case '3':
                     for (int i = 0; i < invoices.size(); i++) {
-                        System.out.println(i + ". " + invoices.get(i).invoiceID);
+                        System.out.println(i + ". " + invoices.get(i).invoiceName);
                     }
                     break;
                 case '4':
                     if(invoice == null){
-                        System.out.println("Nie wybrano faktury");
+                        System.out.println("No invoice chosen");
                     } else {
                         repository.saveInvoice(invoice);
                     }
                     break;
                 case '5':
-                    System.out.println("Podaj numer faktury: ");
+                    System.out.println("Select invoice: ");
                     int index = Integer.parseInt(reader.readLine());
                     if (index >= invoices.size()){
-                        System.out.println("Nie ma takiej faktury");
+                        System.out.println("Invalid invoice index");
                     } else {
                         invoice = invoices.get(index);
                     }
@@ -99,7 +99,7 @@ public class MenuControler implements IMenu {
                     exit = true;
                     break;
                 default:
-                    System.out.println("Nieznana opcja");
+                    System.out.println("Unknown option");
             }
         }
     }

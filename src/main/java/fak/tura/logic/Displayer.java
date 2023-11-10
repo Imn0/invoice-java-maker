@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Pure fabrication
- */
+
 @Component
 public class Displayer implements IShowInvoice {
     private final IElementCalculator ElementCalculator;
@@ -28,28 +26,28 @@ public class Displayer implements IShowInvoice {
         try {
             AsciiTable headerTable = new AsciiTable();
             headerTable.addRule();
-            row = headerTable.addRow("Faktura VAT");
+            row = headerTable.addRow("VAT Invloice");
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Nr: " + invoice.invoiceID);
+            row = headerTable.addRow("No: " + invoice.invoiceName);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Data wystawienia: " + invoice.invoiceDate);
+            row = headerTable.addRow("Invoice date: " + invoice.invoiceDate);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
-            row = headerTable.addRow("Data sprzedaży: " + invoice.saleDate);
+            row = headerTable.addRow("Sale date: " + invoice.saleDate);
             row.setTextAlignment(TextAlignment.CENTER);
             headerTable.addRule();
             String header = headerTable.render();
             System.out.println(header);
         } catch (Exception e) {
-            System.out.println("Błąd wyświetlania nagłówka");
+            System.out.println("Error displaying header");
             System.out.println(e.getMessage());
         }
         try {
             AsciiTable partiesTable = new AsciiTable();
             partiesTable.addRule();
-            row = partiesTable.addRow(null, "Sprzedawca", null, "Nabywca");
+            row = partiesTable.addRow(null, "Seller", null, "Buyer");
             row.setTextAlignment(TextAlignment.CENTER);
             partiesTable.addRule();
             List<Pair<String, String>> sellerFields = invoice.seller.getFields();
@@ -75,14 +73,14 @@ public class Displayer implements IShowInvoice {
             String parties = partiesTable.render();
             System.out.println(parties);
         } catch (Exception e) {
-            System.out.println("Błąd wyświetlania tabeli z danymi sprzedawcy i nabywcy");
+            System.out.println("Error displaying parties");
         }
 
         try {
             AsciiTable elementsTable = new AsciiTable();
 
             elementsTable.addRule();
-            row = elementsTable.addRow("nazwa", "Jm.", "ilość", "Cena netto", "Wartość netto", "Stawka VAT", "Kwota VAT", "Wartość brutto");
+            row = elementsTable.addRow("name", "quantity unit", "quantity", "unit price", "before tax", "VAT", "tax amount", "after tax");
             row.setTextAlignment(TextAlignment.RIGHT);
             elementsTable.addRule();
             for (var element : invoice.elements) {
@@ -91,11 +89,11 @@ public class Displayer implements IShowInvoice {
                 elementsTable.addRule();
             }
             for (var vat : invoice.getAvailableVATs()) {
-                row = elementsTable.addRow(null, null, "", "W tym", InvoiceCalculator.totalBeforeTax(invoice, vat), vat, InvoiceCalculator.totalTax(invoice, vat), InvoiceCalculator.totalAfetTax(invoice, vat));
+                row = elementsTable.addRow(null, null, "", "Including", InvoiceCalculator.totalBeforeTax(invoice, vat), vat, InvoiceCalculator.totalTax(invoice, vat), InvoiceCalculator.totalAfetTax(invoice, vat));
                 row.setTextAlignment(TextAlignment.RIGHT);
             }
             elementsTable.addRule();
-            row = elementsTable.addRow(null, null, "", "Razem", InvoiceCalculator.totalBeforeTax(invoice), "", InvoiceCalculator.totalTax(invoice), InvoiceCalculator.totalAfetTax(invoice));
+            row = elementsTable.addRow(null, null, "", "Total", InvoiceCalculator.totalBeforeTax(invoice), "", InvoiceCalculator.totalTax(invoice), InvoiceCalculator.totalAfetTax(invoice));
             row.setTextAlignment(TextAlignment.RIGHT);
             elementsTable.addRule();
             String rend = elementsTable.render();
@@ -116,7 +114,7 @@ public class Displayer implements IShowInvoice {
             String rend = paymentMethodTable.render();
             System.out.println(rend);
         } catch (Exception e) {
-            System.out.println("Błąd wyświetlania tabeli z danymi płatności");
+            System.out.println("Error displaying payment method");
             System.out.println(e.getMessage());
         }
 

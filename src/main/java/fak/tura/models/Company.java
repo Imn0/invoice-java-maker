@@ -24,15 +24,15 @@ public class Company implements IInvoiceParty {
     @Override
     public final List<Pair<String, String>> getFields() {
         List<Pair<String, String>> fields = new ArrayList<>();
-        Pair<String, String> field = new Pair<>("Nazwa:", name);
+        Pair<String, String> field = new Pair<>("Name:", name);
         fields.add(field);
-        field = new Pair<>("Adres:", adress);
+        field = new Pair<>("Adress:", adress);
         fields.add(field);
-        field = new Pair<>("Telefon:", phoneNumber);
+        field = new Pair<>("Phone:", phoneNumber);
         fields.add(field);
         field = new Pair<>("email:", email);
         fields.add(field);
-        field = new Pair<>("NIP:", taxIdentificationNumber);
+        field = new Pair<>("Tax identification:", taxIdentificationNumber);
         fields.add(field);
 
         return fields;

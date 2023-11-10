@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 
-/**
- * Information expert
- */
+
 public class Invoice {
 
     public Set<FixedPointNumber> getAvailableVATs() {
@@ -19,7 +17,7 @@ public class Invoice {
     public final IInvoiceParty seller;
     public final IInvoiceParty buyer;
     public final IPaymentMethod paymentMethod;
-    public final String invoiceID;
+    public final String invoiceName;
     public final String invoiceDate;
     public final String saleDate;
     public String additionalInfo = "";
@@ -27,11 +25,11 @@ public class Invoice {
 
 
 
-    public Invoice(final List<Element> elements, final IInvoiceParty seller, final IInvoiceParty buyer, final String invoiceID, final String invoiceDate, final String saleDate, final String additionalInfo, final IPaymentMethod paymentMethod) {
+    public Invoice(final List<Element> elements, final IInvoiceParty seller, final IInvoiceParty buyer, final String invoiceName, final String invoiceDate, final String saleDate, final String additionalInfo, final IPaymentMethod paymentMethod) {
         this.elements = elements;
         this.seller = seller;
         this.buyer = buyer;
-        this.invoiceID = invoiceID;
+        this.invoiceName = invoiceName;
         this.invoiceDate = invoiceDate;
         this.saleDate = saleDate;
         this.additionalInfo = additionalInfo;
