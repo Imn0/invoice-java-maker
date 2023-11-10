@@ -9,9 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
-/**
- * Controler, pure fabrication
- */
+
 @Component
 public final class InvoiceCreator implements IInvoiceCreator {
     private final BufferedReader reader;
@@ -23,18 +21,18 @@ public final class InvoiceCreator implements IInvoiceCreator {
     public Invoice generateInvoice() throws IOException {
 
 
-        System.out.print("Podaj nazwę faktury: ");
+        System.out.print("Invoice ID: ");
         final String invoiceID = reader.readLine();
 
-        System.out.print("Podaj datę wystawienia: ");
+        System.out.print("Invoice date: ");
         final String invoiceDate = reader.readLine();
 
-        System.out.print("Podaj datę sprzedarzy: ");
+        System.out.print("Sale date: ");
         final String saleDate = reader.readLine();
 
-        System.out.println("Wprowadź sprzedającego");
+        System.out.println("Input seller");
         final IInvoiceParty seller = createInvoiceParty();
-        System.out.println("Wprowadź kupującego");
+        System.out.println("Input buyer");
         final IInvoiceParty buyer = createInvoiceParty();
         final IPaymentMethod paymentMethod = createPaymentMethod();
 
@@ -46,7 +44,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
             String input;
             boolean gettingInput = true;
             while (gettingInput) {
-                System.out.print("dodać kolejny produkt [y/n]");
+                System.out.print("add another product? [y/n] ");
                 input = reader.readLine();
                 char yesOption = 'y';
                 char noOption = 'n';
@@ -68,10 +66,10 @@ public final class InvoiceCreator implements IInvoiceCreator {
         IPaymentMethod paymentMethod;
         while (true) {
             try {
-                System.out.println("Wybierz metodę płatności");
-                System.out.println("gotówka - 1");
+                System.out.println("Select payment method");
+                System.out.println("cash - 1");
                 char gotowkaOption = '1';
-                System.out.println("przelew - 2");
+                System.out.println("bank transfer - 2");
                 char przelewOption = '2';
                 String input = reader.readLine();
                 if (!input.isEmpty()) {
@@ -79,7 +77,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
                         paymentMethod = new CashPayment();
                         break;
                     } else if (input.charAt(0) == przelewOption) {
-                        System.out.print("numer konta: ");
+                        System.out.print("account number: ");
                         String accountNumber = reader.readLine();
                         System.out.print("bank: ");
                         String bankName = reader.readLine();
@@ -89,7 +87,7 @@ public final class InvoiceCreator implements IInvoiceCreator {
                     }
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Error dodaj produkt/usuługe jeszcze raz");
+                System.out.println("Error add payment method again");
             }
         }
         return paymentMethod;
@@ -100,28 +98,28 @@ public final class InvoiceCreator implements IInvoiceCreator {
         while (true) {
             try {
                 System.out.println("Wprowadź produkt/uslugę");
-                System.out.print("nazwa: ");
+                System.out.print("name: ");
                 final String nazwa = reader.readLine();
 
-                System.out.print("jednostka miary: ");
+                System.out.print("quantity unit: ");
                 final String jednostkaMiary = reader.readLine();
 
-                System.out.print("stawka vat: ");
+                System.out.print("VAT rate: ");
                 String svat = reader.readLine();
                 svat = svat.replace('%', ' ');
                 svat = svat.trim();
 
                 final int vat = Integer.parseInt(svat);
 
-                System.out.print("cenna netto: ");
+                System.out.print("unit price before tax: ");
                 final String cenaNetto = reader.readLine();
 
 
-                System.out.print("ilosc: ");
+                System.out.print("amount: ");
                 final String ilosc = reader.readLine();
                 return new Element(cenaNetto, vat, nazwa, jednostkaMiary, ilosc);
             } catch (NumberFormatException e) {
-                System.out.println("Error dodaj produkt/usuługe jeszcze raz");
+                System.out.println("Error add element again");
             }
         }
 
@@ -132,10 +130,10 @@ public final class InvoiceCreator implements IInvoiceCreator {
             boolean isCompany = true;
             boolean gettingInput = true;
             while (gettingInput) {
-                System.out.println("Wybierz typ kontrahenta");
-                System.out.println("firma - 1");
+                System.out.println("Choose type of party");
+                System.out.println("company - 1");
                 char firmaOption = '1';
-                System.out.println("osoba - 2");
+                System.out.println("person - 2");
                 char osobaOption = '2';
                 String input = reader.readLine();
                 if (!input.isEmpty()) {
@@ -152,41 +150,41 @@ public final class InvoiceCreator implements IInvoiceCreator {
             String surname = "";
 
             if (isCompany) {
-                System.out.print("nazwa: ");
+                System.out.print("name: ");
                 companyName = reader.readLine();
                 if (companyName.isEmpty()) {
-                    System.out.println("nazwa nie może być pusta");
+                    System.out.println("name cannot be empty");
                     continue;
                 }
             } else {
-                System.out.print("imię: ");
+                System.out.print("name: ");
                 name = reader.readLine();
                 if (name.isEmpty()) {
-                    System.out.println("imię nie może być puste");
+                    System.out.println("name cannot be empty");
                     continue;
                 }
-                System.out.print("nazwisko: ");
+                System.out.print("surname: ");
                 surname = reader.readLine();
                 if (surname.isEmpty()) {
-                    System.out.println("nazwisko nie może być puste");
+                    System.out.println("surname cannot be empty");
                     continue;
                 }
             }
 
-            System.out.print("adres: ");
+            System.out.print("adress: ");
             String adress = reader.readLine();
 
-            System.out.print("nip: ");
+            System.out.print("tax identification number: ");
             String taxIdentificationNumber = reader.readLine();
             String socialSecurityNumber = "";
             if (!isCompany) {
-                System.out.print("Pesel: ");
+                System.out.print("social security: ");
                 socialSecurityNumber = reader.readLine();
             }
             System.out.print("email: ");
             String email = reader.readLine();
 
-            System.out.print("telefon: ");
+            System.out.print("phone: ");
             String phoneNumber = reader.readLine();
 
             IInvoiceParty party;

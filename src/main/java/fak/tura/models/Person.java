@@ -34,20 +34,20 @@ public class Person implements IInvoiceParty {
 
     public List<Pair<String, String>> getFields() {
         List<Pair<String, String>> fields = new ArrayList<>();
-        Pair<String, String> field = new Pair<>("Nazwa:", name + " " + surname);
+        Pair<String, String> field = new Pair<>("Name:", name + " " + surname);
         fields.add(field);
-        field = new Pair<>("Adres:", adress);
+        field = new Pair<>("Adress:", adress);
         fields.add(field);
-        field = new Pair<>("Telefon:", phoneNumber);
+        field = new Pair<>("Phone:", phoneNumber);
         fields.add(field);
         field = new Pair<>("email:", email);
         fields.add(field);
         if (taxIdenificationNumber != null && !taxIdenificationNumber.isEmpty()) {
-            field = new Pair<>("NIP:", taxIdenificationNumber);
+            field = new Pair<>("Tax Identification:", taxIdenificationNumber);
             fields.add(field);
         }
         if (socialSecurityNumber != null && !socialSecurityNumber.isEmpty()) {
-            field = new Pair<>("PESEL:", socialSecurityNumber);
+            field = new Pair<>("Social Security:", socialSecurityNumber);
             fields.add(field);
         }
         return fields;

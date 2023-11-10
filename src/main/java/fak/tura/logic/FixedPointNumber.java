@@ -14,7 +14,12 @@ public class FixedPointNumber {
     }
     public void mul(FixedPointNumber fixedPointNumber) {
         this.number *= fixedPointNumber.number;
-        this.number = number/100;
+        if(number % 100 >= 50){
+            this.number = number/100;
+            this.number++;
+        } else {
+            this.number = number/100;
+        }
     }
 
     public boolean isEqual(FixedPointNumber fixedPointNumber) {
