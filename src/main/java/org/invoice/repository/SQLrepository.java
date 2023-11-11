@@ -52,11 +52,11 @@ public class SQLrepository implements IRepository, IElementRepository {
 
     @Override
     public long saveInvoice(final Invoice invoice) {
-        String SQL = "INSERT INTO invoice(invoice_name,invoice_date, sale_date, seller_id, buyer_id, payment_id, basket_id) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String SQL = "INSERT INTO invoice(invoice_name,invoice_date, sale_date, basket_name) "
+                + "VALUES(?, ?, ?, ?)";
 
         long id = 0;
-        long basketID = saveBasket(invoice.elements);
+        long basketID = saveBasket(invoice.invoiceName,invoice.elements);
 
         try (PreparedStatement pstmt = connection.prepareStatement(SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
@@ -64,6 +64,7 @@ public class SQLrepository implements IRepository, IElementRepository {
             pstmt.setString(1, invoice.invoiceName);
             pstmt.setString(2, invoice.invoiceDate);
             pstmt.setString(3, invoice.saleDate);
+            pstmt.setString(3, invoice.invoiceName);
             id = execute(pstmt);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -72,9 +73,9 @@ public class SQLrepository implements IRepository, IElementRepository {
         return id;
     }
 
-    private long saveBasket(List<Element> elements){
-        String SQL = "INSERT INTO basket(element_id) "
-                + "VALUES(?)";
+    private long saveBasket(String basket_name,List<Element> elements){
+        String SQL = "INSERT INTO basket(basket_name,element_id) "
+                + "VALUES(?, ?)";
 
         long id = 0;
         try (PreparedStatement pstmt = connection.prepareStatement(SQL,
